@@ -1,32 +1,34 @@
-package ru.kata.spring.boot_security.demo.model;
+package ru.kata.spring.boot_security.demo.entity;
+
+import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
-import javax.validation.constraints.NotBlank;
+import java.util.Set;
 
 @Entity
-@Table(name = "users")
-public class User {
+@Table(name = "roles")
+public class Role implements GrantedAuthority {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private int id;
 
     @Column(name = "name")
-    @NotBlank(message = "Имя не должно быть пустым")
     private String name;
 
-    @Column(name = "surname")
-    @NotBlank(message = "Фамилия не должна быть пустой")
-    private String surname;
+    @ManyToMany(mappedBy = "roles")
+    private Set<User> users;
 
+    public Role() {}
 
-    public User() {
+    public Role(String name) {
+        this.name = name;
     }
 
     public int getId() {
@@ -45,20 +47,17 @@ public class User {
         this.name = name;
     }
 
-    public String getSurname() {
-        return surname;
-    }
-
-    public void setSurname(String surname) {
-        this.surname = surname;
+    @Override
+    public String getAuthority() {
+        return name;
     }
 
     @Override
     public String toString() {
-        return "User{" +
+        return "Role{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", surname='" + surname + '\'' +
+                ", users=" + users +
                 '}';
     }
 }

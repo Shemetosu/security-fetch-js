@@ -1,18 +1,64 @@
 package ru.kata.spring.boot_security.demo.service;
 
-import ru.kata.spring.boot_security.demo.model.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
+import ru.kata.spring.boot_security.demo.entity.User;
+import ru.kata.spring.boot_security.demo.repository.UserRepository;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
 import java.util.List;
 
-public interface UserService {
+@Service
+public class UserService implements UserDetailsService {
 
-    List<User> getAllUsers();
+    @PersistenceContext
+    private EntityManager em;
 
-    User getUser(int id);
+    private final UserRepository userRepository;
 
-    void saveUser(User user);
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
-    void updateUser(User user);
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = userRepository.findUserByUsername(username);
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found");
+        }
+        return user;
+    }
 
-    void deleteUser(int id);
+    @Transactional
+    public List<User> getAllUsers() {
+        return em
+                .createQuery("select u from User u", User.class)
+                .getResultList();
+    }
+
+    @Transactional
+    public User getUser(int id) {
+        return em.find(User.class, id);
+    }
+
+    @Transactional
+    public void saveUser(User user) {
+        em.persist(user);
+    }
+
+    @Transactional
+    public void updateUser(User user) {
+        getUser(user.getId());
+        em.merge(user);
+    }
+
+    @Transactional
+    public void deleteUser(int id) {
+        User user = getUser(id);
+        em.remove(user);
+    }
 }

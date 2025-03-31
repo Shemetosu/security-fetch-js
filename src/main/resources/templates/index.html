@@ -4,7 +4,46 @@
     <title>Spring Security Example</title>
 </head>
 <body>
-<h1>Welcome to Index PAGE!</h1>
+<h1>Welcome to Index Page!</h1>
+
+<form th:action="@{/logout}" method="post">
+    <button type="submit">Logout</button>
+</form>
+
+<form th:action="@{/logout}" th:method="POST">
+    <input type="submit" value="Logout" />
+</form>
+<form th:action="@{/user}" th:method="GET">
+    <input type="submit" value="User" />
+</form>
+
+
+<h2>All Users</h2>
+<br>
+<table>
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Surname</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="user : ${users}">
+        <td th:text="${user.name}"></td>
+        <td th:text="${user.surname}"></td>
+        <td>
+            <a th:href="@{/updateUser(id=${user.id})}">Update</a>
+            <a th:href="@{/deleteUser(id=${user.id})}">Delete</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<br/>
+<a th:href="@{/addUser}">Add User</a>
+<div th:if="${#lists.isEmpty(users)}">
+    <p>No users found.</p>
+</div>
 
 
 </body>

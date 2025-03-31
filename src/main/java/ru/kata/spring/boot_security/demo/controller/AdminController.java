@@ -1,5 +1,6 @@
 package ru.kata.spring.boot_security.demo.controller;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -7,17 +8,19 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import ru.kata.spring.boot_security.demo.model.User;
+import ru.kata.spring.boot_security.demo.entity.User;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
 import java.util.List;
 
 @Controller
-public class UsersController {
+@RequestMapping("/admin")
+@PreAuthorize("hasRole('ADMIN')")
+public class AdminController {
 
     private final UserService userService;
 
-    public UsersController(UserService userService) {
+    public AdminController(UserService userService) {
         this.userService = userService;
     }
 
@@ -44,7 +47,7 @@ public class UsersController {
     @PostMapping("/addUser")
     public String createUser(@ModelAttribute("user") User user) {
         userService.saveUser(user);
-        return "redirect:/";
+        return "redirect:/admin/users";
     }
 
     @GetMapping(value = "/updateUser")
@@ -56,12 +59,12 @@ public class UsersController {
     @PostMapping(value = "/updateUser")
     public String updateUser(@ModelAttribute("user") User user) {
         userService.updateUser(user);
-        return "redirect:/";
+        return "redirect:/admin/users";
     }
 
     @RequestMapping(value = "/deleteUser")
     public String deleteUser(@RequestParam("id") int id) {
         userService.deleteUser(id);
-        return "redirect:/";
+        return "redirect:/admin/users";
     }
 }
