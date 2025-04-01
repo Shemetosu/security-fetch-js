@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.kata.spring.boot_security.demo.entity.User;
+import ru.kata.spring.boot_security.demo.repository.RoleRepository;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
 import java.util.List;
@@ -19,28 +20,30 @@ import java.util.List;
 public class AdminController {
 
     private final UserService userService;
+    private final RoleRepository roleRepository;
 
-    public AdminController(UserService userService) {
+    public AdminController(UserService userService, RoleRepository roleRepository) {
         this.userService = userService;
+        this.roleRepository = roleRepository;
     }
 
-    @GetMapping("/")
-    public String index(Model model) {
-        List<User> users = userService.getAllUsers();
-        model.addAttribute("users", users);
-        return "users";
-    }
-
-    @GetMapping(value = "/users")
+    @GetMapping
     public String getAllUsers(Model model) {
         List<User> users = userService.getAllUsers();
         model.addAttribute("users", users);
         return "users";
     }
 
+    @GetMapping("/admin")
+    public String adminRedirect(Model model) {
+        model.addAttribute("users", userService.getAllUsers());
+        return "users";
+    }
+
     @GetMapping(value = "/addUser")
     public String addUser(Model model) {
         model.addAttribute("user", new User());
+        model.addAttribute("roles", roleRepository.findAll());
         return "addUser";
     }
 
@@ -51,19 +54,20 @@ public class AdminController {
     }
 
     @GetMapping(value = "/updateUser")
-    public String updateUser(@RequestParam("id") int id, Model model) {
+    public String updateUser(@RequestParam("id") Long id, Model model) {
         model.addAttribute("user", userService.getUser(id));
+        model.addAttribute("roles", roleRepository.findAll());
         return "updateUser";
     }
 
     @PostMapping(value = "/updateUser")
     public String updateUser(@ModelAttribute("user") User user) {
-        userService.updateUser(user);
+        userService.saveUser(user);
         return "redirect:/admin/users";
     }
 
-    @RequestMapping(value = "/deleteUser")
-    public String deleteUser(@RequestParam("id") int id) {
+    @GetMapping(value = "/deleteUser")
+    public String deleteUser(@RequestParam("id") Long id) {
         userService.deleteUser(id);
         return "redirect:/admin/users";
     }

@@ -9,8 +9,8 @@ import ru.kata.spring.boot_security.demo.entity.User;
 @Controller
 public class UserController {
 
-    @GetMapping(value = "/users")
-    public String getAllUsers(@AuthenticationPrincipal User user, Model model) {
+    @GetMapping(value = "/user")
+    public String showUserPage(@AuthenticationPrincipal User user, Model model) {
         model.addAttribute("user", user);
         return "user";
     }
