@@ -4,7 +4,7 @@
     <title>Add User</title>
 </head>
 <body>
-<form th:method="post" th:action="@{/addUser}" th:object="${user}">
+<form th:method="post" th:action="@{/admin/addUser}" th:object="${user}">
     <input type="hidden" th:field="*{id}"/>
     <label for="username">Enter username: </label>
     <input type="text" th:field="*{username}" id="username"/>
@@ -21,11 +21,11 @@
     <label>Choose the Role:</label>
     <br/>
     <div th:each="role : ${roles}">
-        <input type="checkbox" th:value="${role.id}" th:field="*{roles}" id="role_${role.id}"/>
-        <label th:for="role_${role.id}" th:text="${role.name}"></label>
+        <input type="checkbox" name="roles" th:value="${role.id}" th:id="'role_' + ${role.id}"/>
+        <label th:for="'role_' + ${role.id}" th:text="${role.name}"></label>
         <br/>
     </div>
-    <input type="submit" value="OK"/>
+    <input type="submit" value="Create"/>
 </form>
 <a th:href="@{/admin}">Back to user list</a>
 </body>
