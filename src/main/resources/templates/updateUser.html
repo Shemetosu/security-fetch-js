@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html lang="en"
-      xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Update User</title>
@@ -11,11 +10,16 @@
 <nav class="navbar navbar-dark bg-dark">
     <div class="container-fluid">
         <span class="navbar-brand mb-0 h1">Admin panel - Update User</span>
-        <form th:action="@{/logout}" method="post" class="d-flex">
-            <button class="btn btn-outline-light" type="submit">Logout</button>
+        <form th:action="@{/logout}"
+              method="post"
+              class="d-flex">
+            <button class="btn btn-outline-light"
+                    type="submit">Logout
+            </button>
         </form>
     </div>
 </nav>
+
 <div class="container mt-4">
     <div class="row justify-content-center">
         <div class="col-8">
@@ -24,36 +28,69 @@
                     <h5>Update user</h5>
                 </div>
                 <div class="card-body">
-                    <form th:method="post" th:action="@{/admin/updateUser}" th:object="${user}">
-                        <input type="hidden" th:field="*{id}"/>
+                    <form th:method="post"
+                          th:action="@{/admin/updateUser}"
+                          th:object="${user}">
+                        <input type="hidden"
+                               th:field="*{id}"/>
+
                         <div class="mb-3">
-                            <label for="firstname" class="form-label">First Name</label>
-                            <input type="text" th:field="*{firstname}" id="firstname" class="form-control">
+                            <label for="firstname"
+                                   class="form-label">First Name</label>
+                            <input type="text"
+                                   th:field="*{firstname}"
+                                   id="firstname"
+                                   class="form-control">
                         </div>
+
                         <div class="mb-3">
-                            <label for="lastname" class="form-label">Last Name</label>
-                            <input type="text" th:field="*{lastname}" id="lastname" class="form-control">
+                            <label for="lastname"
+                                   class="form-label">Last Name</label>
+                            <input type="text"
+                                   th:field="*{lastname}"
+                                   id="lastname"
+                                   class="form-control">
                         </div>
+
                         <div class="mb-3">
-                            <label for="username" class="form-label">Email (username)</label>
-                            <input type="text" th:field="*{username}" id="username" class="form-control">
+                            <label for="username"
+                                   class="form-label">Email (username)</label>
+                            <input type="text"
+                                   th:field="*{username}"
+                                   id="username"
+                                   class="form-control">
                         </div>
+
                         <div class="mb-3">
-                            <label for="password" class="form-label">Password</label>
-                            <input type="password" th:field="*{password}" id="password" class="form-control">
+                            <label for="password"
+                                   class="form-label">Password</label>
+                            <input type="password"
+                                   th:field="*{password}"
+                                   id="password"
+                                   class="form-control">
                         </div>
+
                         <div class="mb-3">
                             <label class="form-label">Roles</label>
-                            <div th:each="role : ${roles}" class="form-check">
-                                <input class="form-check-input" type="checkbox" name="roles"
-                                       th:value="${role.id}" th:id="'role_' + ${role.id}"
+                            <div th:each="role : ${roles}"
+                                 class="form-check">
+                                <input class="form-check-input"
+                                       type="checkbox"
+                                       name="roles"
+                                       th:value="${role.id}"
+                                       th:id="'role_' + ${role.id}"
                                        th:checked="${user.roles.contains(role)}">
-                                <label class="form-check-label" th:for="'role_' + ${role.id}" th:text="${role.name}">Role</label>
+                                <label class="form-check-label"
+                                       th:for="'role_' + ${role.id}"
+                                       th:text="${role.name}">Role</label>
                             </div>
                         </div>
+
                         <div class="d-flex justify-content-between">
-                            <a class="btn btn-secondary" th:href="@{/admin}">Cancel</a>
-                            <button type="submit" class="btn btn-primary">Update user</button>
+                            <a class="btn btn-secondary"
+                               th:href="@{/admin}">Cancel</a>
+                            <button type="submit"
+                                    class="btn btn-primary">Update user</button>
                         </div>
                     </form>
                 </div>

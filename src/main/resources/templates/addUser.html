@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html lang="en"
-      xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Add New User</title>
@@ -10,12 +9,19 @@
 <body>
 <nav class="navbar navbar-dark bg-dark">
     <div class="container-fluid">
-        <span class="navbar-brand mb-0 h1">Admin panel - Add New User</span>
-        <form th:action="@{/logout}" method="post" class="d-flex">
-            <button class="btn btn-outline-light" type="submit">Logout</button>
+        <span class="navbar-brand mb-0 h1">
+            Admin panel - Add New User
+        </span>
+        <form th:action="@{/logout}"
+              method="post"
+              class="d-flex">
+            <button class="btn btn-outline-light"
+                    type="submit">Logout
+            </button>
         </form>
     </div>
 </nav>
+
 <div class="container mt-4">
     <div class="row justify-content-center">
         <div class="col-8">
@@ -24,34 +30,69 @@
                     <h5>Add new user</h5>
                 </div>
                 <div class="card-body">
-                    <form method="post" th:action="@{/admin/addUser}" th:object="${user}">
+                    <form method="post"
+                          th:action="@{/admin/addUser}"
+                          th:object="${user}">
                         <div class="mb-3">
-                            <label for="firstname" class="form-label">First Name</label>
-                            <input type="text" th:field="*{firstname}" class="form-control" id="firstname" required>
+                            <label for="firstname"
+                                   class="form-label">First Name</label>
+                            <input type="text"
+                                   th:field="*{firstname}"
+                                   class="form-control"
+                                   id="firstname"
+                                   required>
                         </div>
+
                         <div class="mb-3">
-                            <label for="lastname" class="form-label">Last Name</label>
-                            <input type="text" th:field="*{lastname}" class="form-control" id="lastname" required>
+                            <label for="lastname"
+                                   class="form-label">Last Name</label>
+                            <input type="text"
+                                   th:field="*{lastname}"
+                                   class="form-control"
+                                   id="lastname"
+                                   required>
                         </div>
+
                         <div class="mb-3">
-                            <label for="username" class="form-label">Email (username)</label>
-                            <input type="email" th:field="*{username}" class="form-control" id="username" required>
+                            <label for="username"
+                                   class="form-label">Email (username)</label>
+                            <input type="email"
+                                   th:field="*{username}"
+                                   class="form-control"
+                                   id="username"
+                                   required>
                         </div>
+
                         <div class="mb-3">
-                            <label for="password" class="form-label">Password</label>
-                            <input type="password" th:field="*{password}" class="form-control" id="password" required>
+                            <label for="password"
+                                   class="form-label">Password</label>
+                            <input type="password"
+                                   th:field="*{password}"
+                                   class="form-control"
+                                   id="password"
+                                   required>
                         </div>
+
                         <div class="mb-3">
                             <label class="form-label">Roles</label>
-                            <div th:each="role : ${roles}" class="form-check">
-                                <input class="form-check-input" type="checkbox" name="roles"
-                                       th:value="${role.id}" th:id="'role_' + ${role.id}">
-                                <label class="form-check-label" th:for="'role_' + ${role.id}" th:text="${role.name}">Role</label>
+                            <div th:each="role : ${roles}"
+                                 class="form-check">
+                                <input class="form-check-input"
+                                       type="checkbox"
+                                       name="roles"
+                                       th:value="${role.id}"
+                                       th:id="'role_' + ${role.id}">
+                                <label class="form-check-label"
+                                       th:for="'role_' + ${role.id}"
+                                       th:text="${role.name}">Role</label>
                             </div>
                         </div>
+
                         <div class="d-flex justify-content-between">
-                            <a class="btn btn-secondary" th:href="@{/admin}">Cancel</a>
-                            <button type="submit" class="btn btn-success">Add new user</button>
+                            <a class="btn btn-secondary"
+                               th:href="@{/admin}">Cancel</a>
+                            <button type="submit"
+                                    class="btn btn-success">Add new user</button>
                         </div>
                     </form>
                 </div>
