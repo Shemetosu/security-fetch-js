@@ -1,6 +1,7 @@
 package ru.kata.spring.boot_security.demo.controller;
 
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,16 +32,14 @@ public class AdminController {
     }
 
     @GetMapping
-    public String getAllUsers(Model model) {
+    public String showAdminPage(Model model, Authentication authentication) {
+        User currentUser = (User) authentication.getPrincipal();
         List<User> users = userService.getAllUsers();
+        model.addAttribute("currentUser", currentUser);
         model.addAttribute("users", users);
+        model.addAttribute("user", new User());
+        model.addAttribute("roles", roleRepository.findAll());
         return "admin";
-    }
-
-    @GetMapping("/admin")
-    public String adminRedirect(Model model) {
-        model.addAttribute("users", userService.getAllUsers());
-        return "users";
     }
 
     @GetMapping(value = "/addUser")
