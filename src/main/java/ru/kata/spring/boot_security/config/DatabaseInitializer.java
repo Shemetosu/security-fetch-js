@@ -22,24 +22,27 @@ public class DatabaseInitializer {
 
     @PostConstruct
     public void init() {
-        Role roleAdmin = new Role("ROLE_ADMIN");
-        Role roleUser = new Role("ROLE_USER");
-        roleService.save(roleAdmin);
-        roleService.save(roleUser);
+        Role roleAdmin = roleService.findByName("ROLE_ADMIN");
+        if (roleAdmin == null) {
+            roleAdmin = new Role("ROLE_ADMIN");
+            roleService.save(roleAdmin);
+        }
 
-        User admin = new User(
-                "admin",
-                "admin",
-                "admin",
-                "admin",
-                Set.of(roleAdmin));
-        User user = new User(
-                "user",
-                "user",
-                "user",
-                "user",
-                Set.of(roleUser));
-        userService.saveUser(admin);
-        userService.saveUser(user);
+        Role roleUser = roleService.findByName("ROLE_USER");
+        if (roleUser == null) {
+            roleUser = new Role("ROLE_USER");
+            roleService.save(roleUser);
+        }
+
+        if (!userService.existsByUsername("admin")) {
+            User admin = new User("admin", "admin", "admin", "admin", Set.of(roleAdmin));
+            userService.saveUser(admin);
+        }
+
+        if (!userService.existsByUsername("user")) {
+            User user = new User("user", "user", "user", "user", Set.of(roleUser));
+            userService.saveUser(user);
+        }
     }
+
 }

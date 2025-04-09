@@ -52,13 +52,27 @@ public class AdminController {
     }
 
     @PostMapping("/addUser")
-    public String createUser(@Valid @ModelAttribute("user") User user,
+    public String createUser(@ModelAttribute("user") @Valid User user,
                              BindingResult bindingResult,
-                             @RequestParam("roles") List<Long> roleIds,
-                             Model model) {
+                             @RequestParam(value = "roles", required = false) List<Long> roleIds,
+                             Model model,
+                             Authentication authentication) {
+        if (userService.existsByUsername(user.getUsername())) {
+            bindingResult.rejectValue("username",
+                    "error.user",
+                    "User with that email already exists!");
+        }
+        if (roleIds == null || roleIds.isEmpty()) {
+            model.addAttribute("rolesError", "At least one role is required!");
+            bindingResult.reject("roles", "At least one role is required!");
+        }
         if (bindingResult.hasErrors()) {
             model.addAttribute("roles", roleService.findAll());
-            return "addUser";
+            model.addAttribute("user", user);
+            model.addAttribute("users", userService.getAllUsers());
+            model.addAttribute("currentUser", authentication.getPrincipal());
+            model.addAttribute("activeTab", "new-user");
+            return "admin";
         }
         Set<Role> roles = new HashSet<>(roleService.findAllById(roleIds));
         user.setRoles(roles);

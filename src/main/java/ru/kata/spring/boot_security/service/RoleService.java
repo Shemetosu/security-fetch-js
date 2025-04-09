@@ -17,6 +17,11 @@ public class RoleService {
     }
 
     @Transactional(readOnly = true)
+    public Role findByName(String name) {
+        return roleRepository.findRoleByName(name);
+    }
+
+    @Transactional(readOnly = true)
     public List<Role> findAll() {
         return roleRepository.findAll();
     }

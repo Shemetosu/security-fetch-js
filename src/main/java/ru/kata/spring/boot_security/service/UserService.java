@@ -29,6 +29,11 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional(readOnly = true)
+    public boolean existsByUsername(String username) {
+        return userRepository.findUserByUsername(username) != null;
+    }
+
+    @Transactional(readOnly = true)
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }

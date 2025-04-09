@@ -1,14 +1,5 @@
     вместо NoOpPasswordEncoder используй BCryptPasswordEncoder
 
-Пакет model
-
-    не используй жадную загрузку
-    при обновлении и создании нового пользователя могу ввести для поля username значение,  
-    которое уже присутствует в БД, в таком случае пользователь не пройдёт аутентификацию. 
-    Поле username должно быть уникальным
-    переопредели equals и hashCode в entity классах:
-https://jpa-buddy.com/blog/hopefully-the-final-article-about-equals-and-hashcode-for-jpa-entities-with-db-generated-ids/
-
 Пакет service
 
     раздели ответственность класса UserService - создай пакет security, 

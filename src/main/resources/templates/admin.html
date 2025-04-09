@@ -38,12 +38,12 @@
 
             <ul class="nav nav-tabs" id="adminTabs" role="tablist">
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link active" id="users-tab" data-bs-toggle="tab" data-bs-target="#users"
+                    <button class="nav-link" th:classappend="${activeTab} != 'new-user' ? ' active' : ''" id="users-tab" data-bs-toggle="tab" data-bs-target="#users"
                             type="button" role="tab">Users table
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="new-user-tab" data-bs-toggle="tab" data-bs-target="#new-user"
+                    <button class="nav-link" th:classappend="${activeTab} == 'new-user' ? ' active' : ''" id="new-user-tab" data-bs-toggle="tab" data-bs-target="#new-user"
                             type="button" role="tab">New User
                     </button>
                 </li>
@@ -51,8 +51,7 @@
 
             <div class="tab-content" id="adminTabsContent">
                 <!-- Таблица пользователей -->
-                <div class="tab-pane fade show active" id="users" role="tabpanel">
-                    <div class="card mt-3">
+                <div class="tab-pane fade" th:classappend="${activeTab} != 'new-user' ? ' show active' : ''" id="users" role="tabpanel">                    <div class="card mt-3">
                         <div class="card-header">All users</div>
                         <div class="card-body p-0">
                             <table class="table table-striped m-0">
@@ -108,8 +107,7 @@
                 </div>
 
                 <!-- Форма добавления пользователя -->
-                <div class="tab-pane fade" id="new-user" role="tabpanel">
-                    <div class="p-4">
+                <div class="tab-pane fade" th:classappend="${activeTab} == 'new-user' ? ' show active' : ''" id="new-user" role="tabpanel">                    <div class="p-4">
                         <h5>Add new user</h5>
                         <form th:action="@{/admin/addUser}" th:object="${user}" method="post">
                             <div class="mb-3">
@@ -117,19 +115,16 @@
                                 <input type="text" th:field="*{firstname}" class="form-control" id="firstname">
                                 <div class="text-danger" th:if="${#fields.hasErrors('firstname')}" th:errors="*{firstname}"></div>
                             </div>
-
                             <div class="mb-3">
                                 <label for="lastname" class="form-label">Last name</label>
                                 <input type="text" th:field="*{lastname}" class="form-control" id="lastname">
                                 <div class="text-danger" th:if="${#fields.hasErrors('lastname')}" th:errors="*{lastname}"></div>
                             </div>
-
                             <div class="mb-3">
                                 <label for="username" class="form-label">Email</label>
                                 <input type="email" th:field="*{username}" class="form-control" id="username">
                                 <div class="text-danger" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></div>
                             </div>
-
                             <div class="mb-3">
                                 <label for="password" class="form-label">Password</label>
                                 <input type="password" th:field="*{password}" class="form-control" id="password">
@@ -138,10 +133,9 @@
                             <div class="mb-3">
                                 <label for="roles" class="form-label">Roles</label>
                                 <select multiple class="form-select" name="roles" id="roles">
-                                    <option th:each="role : ${roles}" th:value="${role.id}" th:text="${role.name}">
-                                        ROLE
-                                    </option>
+                                    <option th:each="role : ${roles}" th:value="${role.id}" th:text="${role.name}">ROLE</option>
                                 </select>
+                                <div class="text-danger" th:if="${rolesError}" th:text="${rolesError}"></div>
                             </div>
                             <button type="submit" class="btn btn-success">Add new user</button>
                         </form>
@@ -161,9 +155,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-
                 <input type="hidden" name="id" id="edit-id"/>
-
                 <div class="mb-3">
                     <label for="edit-firstname" class="form-label">First name</label>
                     <input type="text" class="form-control" id="edit-firstname" name="firstname" required>
