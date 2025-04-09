@@ -114,20 +114,26 @@
                         <form th:action="@{/admin/addUser}" th:object="${user}" method="post">
                             <div class="mb-3">
                                 <label for="firstname" class="form-label">First name</label>
-                                <input type="text" th:field="*{firstname}" class="form-control" id="firstname" required>
+                                <input type="text" th:field="*{firstname}" class="form-control" id="firstname">
+                                <div class="text-danger" th:if="${#fields.hasErrors('firstname')}" th:errors="*{firstname}"></div>
                             </div>
+
                             <div class="mb-3">
                                 <label for="lastname" class="form-label">Last name</label>
-                                <input type="text" th:field="*{lastname}" class="form-control" id="lastname" required>
+                                <input type="text" th:field="*{lastname}" class="form-control" id="lastname">
+                                <div class="text-danger" th:if="${#fields.hasErrors('lastname')}" th:errors="*{lastname}"></div>
                             </div>
+
                             <div class="mb-3">
                                 <label for="username" class="form-label">Email</label>
-                                <input type="email" th:field="*{username}" class="form-control" id="username" required>
+                                <input type="email" th:field="*{username}" class="form-control" id="username">
+                                <div class="text-danger" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></div>
                             </div>
+
                             <div class="mb-3">
                                 <label for="password" class="form-label">Password</label>
-                                <input type="password" th:field="*{password}" class="form-control" id="password"
-                                       required>
+                                <input type="password" th:field="*{password}" class="form-control" id="password">
+                                <div class="text-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
                             </div>
                             <div class="mb-3">
                                 <label for="roles" class="form-label">Roles</label>

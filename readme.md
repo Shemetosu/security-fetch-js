@@ -23,7 +23,3 @@ https://jpa-buddy.com/blog/hopefully-the-final-article-about-equals-and-hashcode
     EntityNotFoundException с сообщением (так же в методе deleteUser, в случае отсутвия записи 
     выбрасывай исключение )
 
-Пакет controller
-
-    используй класс сервисного слоя, а не репозитория
-    используй аннотацию @Valid

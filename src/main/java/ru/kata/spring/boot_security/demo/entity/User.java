@@ -15,6 +15,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import java.util.Collection;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -69,32 +70,27 @@ public class User implements UserDetails {
         this.id = id;
     }
 
-    public void setUsername(
-            @NotBlank(message = "Username can't be empty") String username) {
+    public void setUsername(String username) {
         this.username = username;
     }
 
-    public void setPassword(
-            @NotBlank(message = "Password can't be empty") String password) {
+    public void setPassword(String password) {
         this.password = password;
     }
 
-    public @NotBlank(message = "You should write your Firstname") String getFirstname() {
+    public String getFirstname() {
         return firstname;
     }
 
-    public void setFirstname(
-            @NotBlank(message = "You should write your Firstname") String firstname) {
+    public void setFirstname(String firstname) {
         this.firstname = firstname;
     }
 
-    public @NotBlank(
-            message = "You should write your Lastname") String getLastname() {
+    public String getLastname() {
         return lastname;
     }
 
-    public void setLastname(
-            @NotBlank(message = "You should write your Lastname") String lastname) {
+    public void setLastname(String lastname) {
         this.lastname = lastname;
     }
 
@@ -139,5 +135,18 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(id, user.id) && Objects.equals(username, user.username) && Objects.equals(password, user.password) && Objects.equals(firstname, user.firstname) && Objects.equals(lastname, user.lastname) && Objects.equals(roles, user.roles);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, username, password, firstname, lastname, roles);
     }
 }
