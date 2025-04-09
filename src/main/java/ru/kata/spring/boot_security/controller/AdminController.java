@@ -92,7 +92,7 @@ public class AdminController {
                              @RequestParam("roles") List<Long> roleIds) {
         Set<Role> roles = new HashSet<>(roleService.findAllById(roleIds));
         user.setRoles(roles);
-        userService.saveUser(user);
+        userService.updateUser(user);
         return "redirect:/admin";
     }
 

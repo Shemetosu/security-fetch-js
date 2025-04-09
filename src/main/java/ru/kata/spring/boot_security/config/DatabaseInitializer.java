@@ -3,8 +3,8 @@ package ru.kata.spring.boot_security.config;
 import org.springframework.stereotype.Component;
 import ru.kata.spring.boot_security.entity.Role;
 import ru.kata.spring.boot_security.entity.User;
-import ru.kata.spring.boot_security.service.RoleService;
-import ru.kata.spring.boot_security.service.UserService;
+import ru.kata.spring.boot_security.service.impl.RoleServiceImpl;
+import ru.kata.spring.boot_security.service.impl.UserServiceImpl;
 
 import javax.annotation.PostConstruct;
 import java.util.Set;
@@ -12,10 +12,10 @@ import java.util.Set;
 @Component
 public class DatabaseInitializer {
 
-    private final UserService userService;
-    private final RoleService roleService;
+    private final UserServiceImpl userService;
+    private final RoleServiceImpl roleService;
 
-    public DatabaseInitializer(UserService userService, RoleService roleService) {
+    public DatabaseInitializer(UserServiceImpl userService, RoleServiceImpl roleService) {
         this.userService = userService;
         this.roleService = roleService;
     }
@@ -35,14 +35,21 @@ public class DatabaseInitializer {
         }
 
         if (!userService.existsByUsername("admin")) {
-            User admin = new User("admin", "admin", "admin", "admin", Set.of(roleAdmin));
+            User admin = new User("admin@mail.ru",
+                    "admin",
+                    "admin",
+                    "admin",
+                    Set.of(roleAdmin));
             userService.saveUser(admin);
         }
 
         if (!userService.existsByUsername("user")) {
-            User user = new User("user", "user", "user", "user", Set.of(roleUser));
+            User user = new User("user@mail.ru",
+                    "user",
+                    "user",
+                    "user",
+                    Set.of(roleUser));
             userService.saveUser(user);
         }
     }
-
 }
