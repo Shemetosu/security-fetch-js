@@ -1,4 +1,3 @@
-    создай отдельный класс, который будет отвечать за инициализацию БД дефолтными записями
     вместо NoOpPasswordEncoder используй BCryptPasswordEncoder
 
 Пакет model
@@ -22,4 +21,3 @@ https://jpa-buddy.com/blog/hopefully-the-final-article-about-equals-and-hashcode
     (противоречит использованию Optional), используй orElseThrow и выбрасывай исключение 
     EntityNotFoundException с сообщением (так же в методе deleteUser, в случае отсутвия записи 
     выбрасывай исключение )
-

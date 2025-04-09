@@ -1,4 +1,4 @@
-package ru.kata.spring.boot_security.demo.config;
+package ru.kata.spring.boot_security.config;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.AuthorityUtils;

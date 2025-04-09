@@ -1,10 +1,9 @@
-package ru.kata.spring.boot_security.demo.service;
+package ru.kata.spring.boot_security.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.kata.spring.boot_security.demo.entity.Role;
-import ru.kata.spring.boot_security.demo.entity.User;
-import ru.kata.spring.boot_security.demo.repository.RoleRepository;
+import ru.kata.spring.boot_security.entity.Role;
+import ru.kata.spring.boot_security.repository.RoleRepository;
 
 import java.util.List;
 
@@ -25,5 +24,10 @@ public class RoleService {
     @Transactional(readOnly = true)
     public List<Role> findAllById(List<Long> roleIds) {
         return roleRepository.findAllById(roleIds);
+    }
+
+    @Transactional
+    public void save(Role role) {
+        roleRepository.save(role);
     }
 }
