@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Panel</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+<nav class="navbar navbar-dark bg-dark px-3">
+    <span class="navbar-text text-white" id="userInfo">Loading...</span>
+    <a class="btn btn-outline-light ms-auto" href="/logout">Logout</a>
+</nav>
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-md-2 bg-white border-end min-vh-100 px-0">
+            <ul class="nav flex-column nav-pills pt-3">
+                <li class="nav-item" id="adminNavItem">
+                    <a class="nav-link active" href="/admin.html">Admin</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/user.html">User</a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Main content -->
+        <div class="col-10 bg-light p-4">
+            <h2>Admin panel</h2>
+
+            <ul class="nav nav-tabs" id="adminTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="users-tab" data-bs-toggle="tab" data-bs-target="#users"
+                            type="button"
+                            role="tab">Users table
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="new-tab" data-bs-toggle="tab" data-bs-target="#new" type="button"
+                            role="tab">New User
+                    </button>
+                </li>
+            </ul>
+
+            <div class="tab-content" id="adminTabsContent">
+
+                <div class="tab-pane fade show active" id="users" role="tabpanel">
+                    <!-- User table -->
+                    <div class="card-header">All users</div>
+                    <div class="card-body p-0">
+                        <table class="table table-striped m-0" id="usersTable">
+                            <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>First Name</th>
+                                <th>Last Name</th>
+                                <th>Email</th>
+                                <th>Roles</th>
+                                <th>Edit</th>
+                                <th>Delete</th>
+                            </tr>
+                            </thead>
+                            <tbody id="usersTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- New User tab -->
+                <div class="tab-pane fade" id="new" role="tabpanel">
+                    <form class="p-3" id="createUserForm" onsubmit="createUser(event)">
+                        <div class="mb-3">
+                            <label for="newFirstname" class="form-label">Firstname</label>
+                            <input type="text" class="form-control" id="newFirstname" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="newLastname" class="form-label">Lastname</label>
+                            <input type="text" class="form-control" id="newLastname" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="newUsername" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="newUsername" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="newPassword" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="newPassword" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="newRoles" class="form-label">Roles</label>
+                            <select multiple class="form-select" id="newRoles"></select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Add</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Modal -->
+<div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form class="modal-content" onsubmit="submitEditUser(event)">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editUserModalLabel">Edit user</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" name="id" id="edit-id"/>
+                <div class="mb-3">
+                    <label for="edit-firstname" class="form-label">First name</label>
+                    <input type="text" class="form-control" id="edit-firstname" name="firstname" required>
+                </div>
+                <div class="mb-3">
+                    <label for="edit-lastname" class="form-label">Last name</label>
+                    <input type="text" class="form-control" id="edit-lastname" name="lastname" required>
+                </div>
+                <div class="mb-3">
+                    <label for="edit-username" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="edit-username" name="username" required>
+                </div>
+                <div class="mb-3">
+                    <label for="edit-password" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="edit-password" name="password">
+                </div>
+                <div class="mb-3">
+                    <label for="edit-roles" class="form-label">Roles</label>
+                    <select multiple class="form-select" name="roles" id="edit-roles"></select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Update</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Delete Modal -->
+<div class="modal fade" id="deleteUserModal" tabindex="-1" aria-labelledby="deleteUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form class="modal-content" onsubmit="submitDeleteUser(event)">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteUserModalLabel">Delete user</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="delete-id" class="form-label">ID</label>
+                    <input type="text" class="form-control" id="delete-id" disabled>
+                    <input type="hidden" name="id" id="delete-id-hidden">
+                </div>
+                <div class="mb-3">
+                    <label for="delete-firstname" class="form-label">First name</label>
+                    <input type="text" class="form-control" id="delete-firstname" disabled>
+                </div>
+                <div class="mb-3">
+                    <label for="delete-lastname" class="form-label">Last name</label>
+                    <input type="text" class="form-control" id="delete-lastname" disabled>
+                </div>
+                <div class="mb-3">
+                    <label for="delete-username" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="delete-username" disabled>
+                </div>
+                <div class="mb-3">
+                    <label for="delete-roles" class="form-label">Roles</label>
+                    <select multiple class="form-select" name="roles" id="delete-roles"></select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-danger">Delete</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/js/admin.js"></script>
+</body>
+</html>

@@ -2,6 +2,7 @@ package ru.kata.spring.boot_security.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -29,12 +30,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Override
-    public void configure(HttpSecurity http) throws Exception {
+    protected void configure(HttpSecurity http) throws Exception {
         http
+                .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/", "/index").permitAll()
-                .antMatchers("/admin/**").hasRole("ADMIN")
-                .antMatchers("/user/**").hasAnyRole("USER", "ADMIN")
+                .antMatchers("/", "/login", "/user.html", "/admin.html").permitAll()
+                .antMatchers("/api/users/current").hasAnyRole("ADMIN", "USER")
+                .antMatchers("/api/user").hasAnyRole("ADMIN", "USER")
+                .antMatchers("/admin.html", "/user.html").hasAnyRole("ADMIN", "USER")
+                .antMatchers(HttpMethod.POST, "/api/users/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin().successHandler(successUserHandler)

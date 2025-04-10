@@ -34,7 +34,7 @@ public class DatabaseInitializer {
             roleService.save(roleUser);
         }
 
-        if (!userService.existsByUsername("admin")) {
+        if (!userService.existsByUsername("admin@mail.ru")) {
             User admin = new User("admin@mail.ru",
                     "admin",
                     "admin",
@@ -43,7 +43,7 @@ public class DatabaseInitializer {
             userService.saveUser(admin);
         }
 
-        if (!userService.existsByUsername("user")) {
+        if (!userService.existsByUsername("user@mail.ru")) {
             User user = new User("user@mail.ru",
                     "user",
                     "user",
