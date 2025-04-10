@@ -22,16 +22,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Transactional(readOnly = true)
+    @Override
     public boolean existsByUsername(String username) {
         return userRepository.findByUsername(username).isPresent();
     }
 
     @Transactional(readOnly = true)
+    @Override
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
 
     @Transactional(readOnly = true)
+    @Override
     public User getUser(Long id) {
         return userRepository
                 .findById(id)
@@ -39,35 +42,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Transactional
+    @Override
     public void saveUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        try {
-            userRepository.save(user);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw e;
-        }
+        userRepository.save(user);
     }
 
     @Transactional
+    @Override
     public void updateUser(User user) {
-        User existingUser = getUser(user.getId());
-        existingUser.setUsername(user.getUsername());
-        existingUser.setFirstname(user.getFirstname());
-        existingUser.setLastname(user.getLastname());
-        if (!passwordEncoder.matches(user.getPassword(), existingUser.getPassword())) {
-            existingUser.setPassword(passwordEncoder.encode(user.getPassword()));
-        }
-        if (user.getRoles() != null && !user.getRoles().isEmpty()) {
-            existingUser.setRoles(user.getRoles());
-        }
-
-        try {
-            userRepository.save(existingUser);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw e;
-        }
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        userRepository.save(user);
     }
 
     @Transactional

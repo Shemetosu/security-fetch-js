@@ -18,21 +18,25 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Transactional(readOnly = true)
+    @Override
     public Role findByName(String name) {
         return roleRepository.findByName(name);
     }
 
     @Transactional(readOnly = true)
+    @Override
     public List<Role> findAll() {
         return roleRepository.findAll();
     }
 
     @Transactional(readOnly = true)
+    @Override
     public List<Role> findAllById(List<Long> roleIds) {
         return roleRepository.findAllById(roleIds);
     }
 
     @Transactional
+    @Override
     public void save(Role role) {
         roleRepository.save(role);
     }

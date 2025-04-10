@@ -10,7 +10,10 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 async function loadRoles() {
-    const res = await fetch('/api/users/roles');
+    const res = await fetch('/api/users/roles', {
+        credentials: 'same-origin'
+    });
+
     const roles = await res.json();
 
     const selects = [
@@ -48,7 +51,7 @@ async function loadUsers() {
     const response = await fetch('/api/users');
     const users = await response.json();
 
-    const tbody = document.querySelector('#usersTable');
+    const tbody = document.querySelector('#usersTableBody');
     tbody.innerHTML = '';
 
     users.forEach(user => {
@@ -61,7 +64,7 @@ async function loadUsers() {
                 <td>${user.username}</td>
                 <td>${roles}</td>
                 <td>
-                    <button class="btn btn-sm btn-primary" onclick="openEditModal(${user.id})">Edit</button>
+                    <button class="btn btn-sm btn-success" onclick="openEditModal(${user.id})">Edit</button>
                 </td>
                 <td>
                     <button class="btn btn-sm btn-danger" onclick="openDeleteModal(${user.id})">Delete</button>
@@ -74,23 +77,32 @@ async function loadUsers() {
 async function createUser(event) {
     event.preventDefault();
 
-    const rolesSelect = document.getElementById('newRoles');
-    const selectedRoles = Array.from(rolesSelect.selectedOptions)
+    const firstname = document.getElementById('newFirstname').value;
+    const lastname = document.getElementById('newLastname').value;
+    const username = document.getElementById('newUsername').value;
+    const password = document.getElementById('newPassword').value;
+
+    const selectedRoles = Array.from(document.getElementById('newRoles').selectedOptions)
         .map(opt => parseInt(opt.value))
-        .filter(id => !isNaN(id))
-        .map(opt => ({ id }));
+        .filter(id => !isNaN(id));
+
+    if (selectedRoles.length === 0) {
+        alert("Пожалуйста, выберите хотя бы одну роль.");
+        return;
+    }
 
     const user = {
-        firstname: document.getElementById('newFirstname').value,
-        lastname: document.getElementById('newLastname').value,
-        username: document.getElementById('newUsername').value,
-        password: document.getElementById('newPassword').value,
-        roles: selectedRoles
+        firstname: firstname,
+        lastname: lastname,
+        username: username,
+        password: password,
+        roles: selectedRoles // массив чисел
     };
 
     const res = await fetch('/api/users/add', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {'Content-Type': 'application/json'},
+        credentials: 'same-origin',
         body: JSON.stringify(user)
     });
 
@@ -99,7 +111,64 @@ async function createUser(event) {
         document.getElementById('createUserForm').reset();
         document.querySelector('#users-tab').click();
     } else {
-        alert("Error when create New User");
+        const text = await res.text();
+        alert("Error when creating New User: " + text);
+    }
+}
+
+async function submitEditUser(event) {
+    event.preventDefault();
+
+    const id = parseInt(document.getElementById('edit-id').value);
+    const firstname = document.getElementById('edit-firstname').value;
+    const lastname = document.getElementById('edit-lastname').value;
+    const username = document.getElementById('edit-username').value;
+    const password = document.getElementById('edit-password').value;
+
+    const selectedRoles = Array.from(document.getElementById('edit-roles').selectedOptions)
+        .map(opt => parseInt(opt.value))
+        .filter(id => !isNaN(id));
+
+    const user = {
+        id,
+        firstname,
+        lastname,
+        username,
+        roles: selectedRoles,
+    };
+
+    if (password) user.password = password;
+
+    console.log("Sent User: ", user);
+
+    const res = await fetch('/api/users/update', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        credentials: 'same-origin',
+        body: JSON.stringify(user)
+    });
+
+    if (res.ok) {
+        bootstrap.Modal.getInstance(document.getElementById('editUserModal')).hide();
+        loadUsers();
+    } else {
+        alert('Error when editing User');
+    }
+}
+
+async function submitDeleteUser(event) {
+    event.preventDefault();
+    const id = document.getElementById('delete-id-hidden').value;
+
+    const res = await fetch(`/api/users/delete?userId=${id}`, {
+        method: 'GET'
+    });
+
+    if (res.ok) {
+        bootstrap.Modal.getInstance(document.getElementById('deleteUserModal')).hide();
+        loadUsers();
+    } else {
+        alert('Error when deleting User');
     }
 }
 
@@ -154,53 +223,4 @@ async function openDeleteModal(id) {
 
     const modal = new bootstrap.Modal(document.getElementById('deleteUserModal'));
     modal.show();
-}
-
-async function submitEditUser(event) {
-    event.preventDefault();
-
-    const id = parseInt(document.getElementById('edit-id').value);
-    const firstname = document.getElementById('edit-firstname').value;
-    const lastname = document.getElementById('edit-lastname').value;
-    const username = document.getElementById('edit-username').value;
-    const password = document.getElementById('edit-password').value;
-
-    const roles = Array.from(document.getElementById('edit-roles').selectedOptions)
-        .map(opt => parseInt(opt.value))
-        .filter(id => !isNaN(id))
-        .map(id => ({ id }));
-
-    const user = { id, firstname, lastname, username, roles };
-    if (password) user.password = password;
-
-    console.log("Sent User: ", user);
-
-    const res = await fetch('/api/users/update', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(user)
-    });
-
-    if (res.ok) {
-        bootstrap.Modal.getInstance(document.getElementById('editUserModal')).hide();
-        loadUsers();
-    } else {
-        alert('Error when editing User');
-    }
-}
-
-async function submitDeleteUser(event) {
-    event.preventDefault();
-    const id = document.getElementById('delete-id-hidden').value;
-
-    const res = await fetch(`/api/users/delete?userId=${id}`, {
-        method: 'GET'
-    });
-
-    if (res.ok) {
-        bootstrap.Modal.getInstance(document.getElementById('deleteUserModal')).hide();
-        loadUsers();
-    } else {
-        alert('Error when deleting User');
-    }
 }
