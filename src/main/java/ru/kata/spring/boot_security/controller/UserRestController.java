@@ -4,12 +4,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.entity.Role;
 import ru.kata.spring.boot_security.entity.User;
 import ru.kata.spring.boot_security.service.RoleService;
@@ -83,7 +78,7 @@ public class UserRestController {
         return ResponseEntity.ok(user);
     }
 
-    @PostMapping("/update")
+    @PutMapping("/update")
     public ResponseEntity<User> updateUser(@RequestBody Map<String, Object> payload) {
         try {
             Long id = Long.valueOf(payload.get("id").toString());
@@ -120,7 +115,7 @@ public class UserRestController {
         }
     }
 
-    @GetMapping("/delete")
+    @DeleteMapping("/delete")
     public ResponseEntity<User> deleteUser(@RequestParam Long userId) {
         userService.deleteUser(userId);
         return ResponseEntity.noContent().build();
