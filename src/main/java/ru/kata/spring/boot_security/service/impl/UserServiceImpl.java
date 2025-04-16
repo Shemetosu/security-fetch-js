@@ -8,6 +8,7 @@ import ru.kata.spring.boot_security.repository.UserRepository;
 import ru.kata.spring.boot_security.service.UserService;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.HashSet;
 import java.util.List;
 
 @Service
@@ -43,17 +44,23 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public void saveUser(User user) {
+    public User saveUser(User user) {
+        if (existsByUsername(user.getUsername())) {
+            throw new IllegalArgumentException("Username is already in use");
+        }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userRepository.save(user);
+        return userRepository.save(user);
     }
 
     @Transactional
     @Override
-    public void updateUser(User user) {
+    public User updateUser(User user) {
         User userToUpdate = getUser(user.getId());
-        userToUpdate.setPassword(passwordEncoder.encode(userToUpdate.getPassword()));
-        userRepository.save(userToUpdate);
+        if (user.getPassword() != null && !user.getPassword().isEmpty()) {
+            userToUpdate.setPassword(passwordEncoder.encode(user.getPassword()));
+        }
+        userToUpdate.setRoles(new HashSet<>(user.getRoles()));
+        return userRepository.save(userToUpdate);
     }
 
     @Transactional

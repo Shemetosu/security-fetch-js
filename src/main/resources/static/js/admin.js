@@ -28,6 +28,7 @@ async function loadRoles() {
             const opt = document.createElement('option');
             opt.value = role.id;
             opt.textContent = role.name.replace("ROLE_", "");
+            opt.setAttribute('data-name', role.name);
             select.appendChild(opt);
         });
     });
@@ -83,8 +84,10 @@ async function createUser(event) {
     const password = document.getElementById('newPassword').value;
 
     const selectedRoles = Array.from(document.getElementById('newRoles').selectedOptions)
-        .map(opt => parseInt(opt.value))
-        .filter(id => !isNaN(id));
+        .map(opt => ({
+            id: parseInt(opt.value),
+            name: opt.getAttribute('data-name')
+        }));
 
     if (selectedRoles.length === 0) {
         alert("Пожалуйста, выберите хотя бы одну роль.");
@@ -96,7 +99,7 @@ async function createUser(event) {
         lastname: lastname,
         username: username,
         password: password,
-        roles: selectedRoles // массив чисел
+        roles: selectedRoles
     };
 
     const res = await fetch('/api/users/add', {
@@ -126,15 +129,17 @@ async function submitEditUser(event) {
     const password = document.getElementById('edit-password').value;
 
     const selectedRoles = Array.from(document.getElementById('edit-roles').selectedOptions)
-        .map(opt => parseInt(opt.value))
-        .filter(id => !isNaN(id));
+        .map(opt => ({
+            id: parseInt(opt.value),
+            name: opt.getAttribute('data-name')
+        }));
 
     const user = {
         id,
         firstname,
         lastname,
         username,
-        roles: selectedRoles,
+        roles: selectedRoles
     };
 
     if (password) user.password = password;
@@ -190,6 +195,7 @@ async function openEditModal(id) {
         const opt = document.createElement('option');
         opt.value = role.id;
         opt.textContent = role.name.replace("ROLE_", "");
+        opt.setAttribute('data-name', role.name);
         if (user.roles.some(r => r.id === role.id)) opt.selected = true;
         select.appendChild(opt);
     });
