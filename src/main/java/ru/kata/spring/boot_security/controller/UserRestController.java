@@ -13,7 +13,6 @@ import ru.kata.spring.boot_security.service.UserService;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -124,18 +123,5 @@ public class UserRestController {
     @GetMapping("/roles")
     public List<Role> getAllRoles() {
         return roleService.findAll();
-    }
-
-    private Set<Role> resolveRoles(Set<Role> roles) {
-        if (roles == null || roles.isEmpty()) {
-            return new HashSet<>();
-        }
-        List<Long> rolesIds = roles.stream()
-                .filter(Objects::nonNull)
-                .map(Role::getId)
-                .filter(Objects::nonNull)
-                .distinct()
-                .collect(Collectors.toList());
-        return new HashSet<>(roleService.findAllById(rolesIds));
     }
 }

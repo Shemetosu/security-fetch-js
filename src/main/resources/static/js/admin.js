@@ -142,7 +142,7 @@ async function submitEditUser(event) {
     console.log("Sent User: ", user);
 
     const res = await fetch('/api/users/update', {
-        method: 'POST',
+        method: 'PUT',
         headers: {'Content-Type': 'application/json'},
         credentials: 'same-origin',
         body: JSON.stringify(user)
@@ -161,7 +161,7 @@ async function submitDeleteUser(event) {
     const id = document.getElementById('delete-id-hidden').value;
 
     const res = await fetch(`/api/users/delete?userId=${id}`, {
-        method: 'GET'
+        method: 'DELETE'
     });
 
     if (res.ok) {
